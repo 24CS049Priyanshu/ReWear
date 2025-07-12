@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Item | ReWear</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <h1 class="logo">ReWear</h1>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="browse.html">Browse</a>
+            <a href="add-item.html">Add Item</a>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <section class="main-content">
+        <h2>Add a New Item</h2>
+        <form id="item-form">
+            <input type="text" placeholder="Title" required />
+            <textarea placeholder="Description" required></textarea>
+            <select required>
+        <option disabled selected>Category</option>
+        <option>Tops</option>
+        <option>Bottoms</option>
+        <option>Accessories</option>
+      </select>
+            <input type="text" placeholder="Size (e.g. M)" required />
+            <input type="file" accept="image/*" multiple required />
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+</body>
+
+</html>
