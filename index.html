@@ -1,25 +1,1316 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <title>ReWear | Welcome</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <script defer src="script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReWear - Sustainable Fashion Exchange</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom CSS for elements that need more styling than Tailwind provides */
+        .gradient-bg {
+            background: linear-gradient(135deg, #6B46C1 0%, #4299E1 100%);
+        }
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .carousel-item {
+            transition: opacity 0.5s ease-in-out;
+        }
+        .carousel-item.hidden {
+            opacity: 0;
+            display: none;
+        }
+        .carousel-item.active {
+            opacity: 1;
+            display: block;
+        }
+        .image-upload-preview {
+            height: 150px;
+            width: 150px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 0.5rem;
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
 </head>
+<body class="bg-gray-50 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#" class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-recycle text-green-500 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-900">ReWear</span>
+                    </a>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="#" class="border-green-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Home</a>
+                        <a href="#browse" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Browse</a>
+                        <a href="#how-it-works" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">How It Works</a>
+                        <a href="#about" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">About</a>
+                    </div>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                    <div class="relative dropdown">
+                        <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
+                            <i class="fas fa-user-circle mr-2"></i> My Account
+                            <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu right-0 mt-2 w-48">
+                            <a href="#dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
+                            <a href="#my-items" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Items</a>
+                            <a href="#swaps" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Swaps</a>
+                            <div class="border-t border-gray-200"></div>
+                            <a href="#logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
+                        </div>
+                    </div>
+                    <button class="ml-4 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                        <i class="fas fa-plus mr-2"></i> List Item
+                    </button>
+                </div>
+                <div class="-mr-2 flex items-center sm:hidden">
+                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500" aria-controls="mobile-menu" aria-expanded="false" id="mobile-menu-button">
+                        <span class="sr-only">Open main menu</span>
+                        <i class="fas fa-bars" id="menu-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
 
-<body>
-    <div class="center-screen">
-        <div class="welcome-box">
-            <h1>Welcome to ReWear</h1>
-            <p>Join the sustainable fashion movement. Log in or create your account to start swapping!</p>
-            <div class="welcome-buttons">
-                <button onclick="goToLogin()">Login</button>
-                <button onclick="goToRegister()">Sign Up</button>
+        <!-- Mobile menu -->
+        <div class="sm:hidden hidden" id="mobile-menu">
+            <div class="pt-2 pb-3 space-y-1">
+                <a href="#" class="bg-green-50 border-green-500 text-green-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Home</a>
+                <a href="#browse" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Browse</a>
+                <a href="#how-it-works" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">How It Works</a>
+                <a href="#about" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">About</a>
+                <div class="pt-4 pb-3 border-t border-gray-200">
+                    <div class="flex items-center px-4">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-user-circle text-gray-400 text-2xl"></i>
+                        </div>
+                        <div class="ml-3">
+                            <div class="text-base font-medium text-gray-800">User Name</div>
+                            <div class="text-sm font-medium text-gray-500">user@example.com</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 space-y-1">
+                        <a href="#dashboard" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Dashboard</a>
+                        <a href="#my-items" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">My Items</a>
+                        <a href="#swaps" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Swaps</a>
+                        <a href="#logout" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="gradient-bg text-white">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 lg:py-24">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
+                <div class="mb-8 lg:mb-0">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight">
+                        Exchange Your Style, Reduce Waste
+                    </h1>
+                    <p class="mt-3 max-w-3xl text-xl md:text-2xl text-green-100">
+                        Join the sustainable fashion movement. Swap clothes you don't wear for items you'll love.
+                    </p>
+                    <div class="mt-8 flex flex-col sm:flex-row gap-4">
+                        <a href="#" class="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-green-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10">
+                            Start Swapping
+                        </a>
+                        <a href="#how-it-works" class="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 bg-opacity-60 hover:bg-opacity-70 md:py-4 md:text-lg md:px-10">
+                            How It Works
+                        </a>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="relative w-full rounded-lg shadow-xl overflow-hidden">
+                        <div class="aspect-w-16 aspect-h-9">
+                            <img class="w-full h-auto object-cover" src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Sustainable fashion">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</body>
 
+    <!-- Stats Section -->
+    <div class="bg-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:text-center">
+                <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">Impact</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    Together we're making a difference
+                </p>
+            </div>
+
+            <div class="mt-10">
+                <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                    <div class="pt-6">
+                        <div class="flow-root bg-gray-50 rounded-lg px-6 pb-8 h-full">
+                            <div class="-mt-6">
+                                <div>
+                                    <span class="inline-flex items-center justify-center p-3 bg-green-500 rounded-md shadow-lg">
+                                        <i class="fas fa-tshirt text-white text-2xl"></i>
+                                    </span>
+                                </div>
+                                <h3 class="mt-8 text-lg font-medium text-gray-900 tracking-tight">10,000+</h3>
+                                <p class="mt-5 text-base text-gray-500">
+                                    Items swapped
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6">
+                        <div class="flow-root bg-gray-50 rounded-lg px-6 pb-8 h-full">
+                            <div class="-mt-6">
+                                <div>
+                                    <span class="inline-flex items-center justify-center p-3 bg-green-500 rounded-md shadow-lg">
+                                        <i class="fas fa-users text-white text-2xl"></i>
+                                    </span>
+                                </div>
+                                <h3 class="mt-8 text-lg font-medium text-gray-900 tracking-tight">5,000+</h3>
+                                <p class="mt-5 text-base text-gray-500">
+                                    Active members
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6">
+                        <div class="flow-root bg-gray-50 rounded-lg px-6 pb-8 h-full">
+                            <div class="-mt-6">
+                                <div>
+                                    <span class="inline-flex items-center justify-center p-3 bg-green-500 rounded-md shadow-lg">
+                                        <i class="fas fa-weight text-white text-2xl"></i>
+                                    </span>
+                                </div>
+                                <h3 class="mt-8 text-lg font-medium text-gray-900 tracking-tight">8,000+ lbs</h3>
+                                <p class="mt-5 text-base text-gray-500">
+                                    Textile waste saved
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6">
+                        <div class="flow-root bg-gray-50 rounded-lg px-6 pb-8 h-full">
+                            <div class="-mt-6">
+                                <div>
+                                    <span class="inline-flex items-center justify-center p-3 bg-green-500 rounded-md shadow-lg">
+                                        <i class="fas fa-leaf text-white text-2xl"></i>
+                                    </span>
+                                </div>
+                                <h3 class="mt-8 text-lg font-medium text-gray-900 tracking-tight">25,000+</h3>
+                                <p class="mt-5 text-base text-gray-500">
+                                    CO2 emissions reduced
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Items Carousel -->
+    <div class="bg-gray-50 py-12" id="browse">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:text-center mb-12">
+                <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">Featured Items</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    Discover your next favorite piece
+                </p>
+            </div>
+
+            <div class="relative">
+                <div class="carousel-container overflow-hidden relative">
+                    <div class="carousel-track flex transition-transform duration-300 ease-in-out" id="carousel-track">
+                        <!-- Item 1 -->
+                        <div class="carousel-item w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-4 mb-8 active">
+                            <div class="item-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out h-full flex flex-col">
+                                <div class="relative pb-3/4 h-48">
+                                    <img class="absolute h-full w-full object-cover" src="https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Denim jacket">
+                                </div>
+                                <div class="p-4 flex-grow flex flex-col">
+                                    <div class="flex justify-between items-start">
+                                        <h3 class="text-lg font-medium text-gray-900">Vintage Denim Jacket</h3>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            250 pts
+                                        </span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-500">Size: M | Condition: Excellent</p>
+                                    <div class="mt-2 flex items-center">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <span class="text-gray-600 ml-1">4.8</span>
+                                        </div>
+                                        <span class="mx-2 text-gray-300">•</span>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-map-marker-alt text-gray-400"></i>
+                                            <span class="text-gray-600 ml-1">New York</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 flex justify-between items-center">
+                                        <button class="text-sm text-green-600 hover:text-green-800 font-medium">
+                                            View Details
+                                        </button>
+                                        <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm font-medium">
+                                            Swap
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 2 -->
+                        <div class="carousel-item w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-4 mb-8">
+                            <div class="item-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out h-full flex flex-col">
+                                <div class="relative pb-3/4 h-48">
+                                    <img class="absolute h-full w-full object-cover" src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="White dress">
+                                </div>
+                                <div class="p-4 flex-grow flex flex-col">
+                                    <div class="flex justify-between items-start">
+                                        <h3 class="text-lg font-medium text-gray-900">Summer White Dress</h3>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            180 pts
+                                        </span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-500">Size: S | Condition: New with tags</p>
+                                    <div class="mt-2 flex items-center">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <span class="text-gray-600 ml-1">4.9</span>
+                                        </div>
+                                        <span class="mx-2 text-gray-300">•</span>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-map-marker-alt text-gray-400"></i>
+                                            <span class="text-gray-600 ml-1">Los Angeles</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 flex justify-between items-center">
+                                        <button class="text-sm text-green-600 hover:text-green-800 font-medium">
+                                            View Details
+                                        </button>
+                                        <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm font-medium">
+                                            Swap
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 3 -->
+                        <div class="carousel-item w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-4 mb-8">
+                            <div class="item-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out h-full flex flex-col">
+                                <div class="relative pb-3/4 h-48">
+                                    <img class="absolute h-full w-full object-cover" src="https://images.unsplash.com/photo-1520367445093-50dc08a59d9d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Leather boots">
+                                </div>
+                                <div class="p-4 flex-grow flex flex-col">
+                                    <div class="flex justify-between items-start">
+                                        <h3 class="text-lg font-medium text-gray-900">Leather Ankle Boots</h3>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            320 pts
+                                        </span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-500">Size: 8 | Condition: Good</p>
+                                    <div class="mt-2 flex items-center">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <span class="text-gray-600 ml-1">4.7</span>
+                                        </div>
+                                        <span class="mx-2 text-gray-300">•</span>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-map-marker-alt text-gray-400"></i>
+                                            <span class="text-gray-600 ml-1">Chicago</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 flex justify-between items-center">
+                                        <button class="text-sm text-green-600 hover:text-green-800 font-medium">
+                                            View Details
+                                        </button>
+                                        <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm font-medium">
+                                            Swap
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item 4 -->
+                        <div class="carousel-item w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-4 mb-8">
+                            <div class="item-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out h-full flex flex-col">
+                                <div class="relative pb-3/4 h-48">
+                                    <img class="absolute h-full w-full object-cover" src="https://images.unsplash.com/photo-1520367445093-50dc08a59d9d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Silk scarf">
+                                </div>
+                                <div class="p-4 flex-grow flex flex-col">
+                                    <div class="flex justify-between items-start">
+                                        <h3 class="text-lg font-medium text-gray-900">Vintage Silk Scarf</h3>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            120 pts
+                                        </span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-500">One size | Condition: Excellent</p>
+                                    <div class="mt-2 flex items-center">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <span class="text-gray-600 ml-1">4.5</span>
+                                        </div>
+                                        <span class="mx-2 text-gray-300">•</span>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-map-marker-alt text-gray-400"></i>
+                                            <span class="text-gray-600 ml-1">Seattle</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 flex justify-between items-center">
+                                        <button class="text-sm text-green-600 hover:text-green-800 font-medium">
+                                            View Details
+                                        </button>
+                                        <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm font-medium">
+                                            Swap
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md p-2 -ml-4 z-10 focus:outline-none" id="carousel-prev">
+                    <i class="fas fa-chevron-left text-gray-600"></i>
+                </button>
+                <button class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-md p-2 -mr-4 z-10 focus:outline-none" id="carousel-next">
+                    <i class="fas fa-chevron-right text-gray-600"></i>
+                </button>
+            </div>
+
+            <div class="mt-8 text-center">
+                <a href="#" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">
+                    Browse All Items
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="bg-white py-12" id="how-it-works">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:text-center mb-12">
+                <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">How It Works</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    Swap in just a few easy steps
+                </p>
+            </div>
+
+            <div class="mt-10">
+                <div class="space-y-10 md:space-y-0 md:grid md:grid-cols-3 md:gap-x-8 md:gap-y-10">
+                    <div class="relative">
+                        <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-green-500 text-white">
+                            <span class="text-xl font-bold">1</span>
+                        </div>
+                        <div class="ml-16">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">List Your Items</h3>
+                            <p class="mt-2 text-base text-gray-500">
+                                Upload photos and details of the clothes you want to swap. Our system will assign points based on item quality.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-green-500 text-white">
+                            <span class="text-xl font-bold">2</span>
+                        </div>
+                        <div class="ml-16">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Browse & Choose</h3>
+                            <p class="mt-2 text-base text-gray-500">
+                                Explore thousands of items from our community. Find something you love and request a swap or redeem with points.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-green-500 text-white">
+                            <span class="text-xl font-bold">3</span>
+                        </div>
+                        <div class="ml-16">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Complete the Swap</h3>
+                            <p class="mt-2 text-base text-gray-500">
+                                Arrange shipping or local pickup. Confirm the swap and earn points for your next exchange!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16 bg-green-50 rounded-lg p-6 md:p-8">
+                <div class="md:flex md:items-center md:justify-between">
+                    <div class="md:w-2/3">
+                        <h3 class="text-xl font-bold text-gray-900">Ready to join the sustainable fashion movement?</h3>
+                        <p class="mt-2 text-gray-600">
+                            Sign up today and get 100 bonus points to start swapping right away!
+                        </p>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        <button class="w-full md:w-auto flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">
+                            Sign Up Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Dashboard Preview -->
+    <div class="bg-gray-50 py-12" id="dashboard">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:text-center mb-12">
+                <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">Your Dashboard</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    Manage your swaps and items
+                </p>
+            </div>
+
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        User Profile
+                    </h3>
+                </div>
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="md:flex md:items-center md:justify-between">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-16 w-16 rounded-full overflow-hidden bg-gray-200">
+                                <i class="fas fa-user text-4xl text-gray-400 mt-3 ml-4"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium text-gray-900">Jane Doe</h4>
+                                <p class="text-sm text-gray-500">jane@example.com</p>
+                                <p class="text-sm text-gray-500">New York, NY</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 md:mt-0">
+                            <button class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                Edit Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <!-- Points Balance -->
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                                <i class="fas fa-coins text-white text-xl"></i>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Available Points
+                                </dt>
+                                <dd class="flex items-baseline">
+                                    <div class="text-2xl font-semibold text-gray-900">
+                                        1,250
+                                    </div>
+                                    <div class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
+                                        <i class="fas fa-arrow-up text-xs"></i>
+                                        <span class="sr-only">Increased by</span>
+                                        20% from last month
+                                    </div>
+                                </dd>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button class="w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">
+                                Earn More Points
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Uploaded Items -->
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                                <i class="fas fa-tshirt text-white text-xl"></i>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Items Listed
+                                </dt>
+                                <dd class="flex items-baseline">
+                                    <div class="text-2xl font-semibold text-gray-900">
+                                        8
+                                    </div>
+                                    <div class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
+                                        <span class="sr-only">Available</span>
+                                        5 available
+                                    </div>
+                                </dd>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button class="w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">
+                                Manage Items
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ongoing Swaps -->
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                                <i class="fas fa-exchange-alt text-white text-xl"></i>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dt class="text-sm font-medium text-gray-500 truncate">
+                                    Active Swaps
+                                </dt>
+                                <dd class="flex items-baseline">
+                                    <div class="text-2xl font-semibold text-gray-900">
+                                        3
+                                    </div>
+                                    <div class="ml-2 flex items-baseline text-sm font-semibold text-yellow-600">
+                                        <span class="sr-only">Pending</span>
+                                        2 pending
+                                    </div>
+                                </dd>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button class="w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">
+                                View Swaps
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg">
+                <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Recent Activity
+                    </h3>
+                </div>
+                <div class="bg-white overflow-hidden">
+                    <ul class="divide-y divide-gray-200">
+                        <li class="px-4 py-4 sm:px-6">
+                            <div class="flex items-center">
+                                <div class="min-w-0 flex-1 flex items-center">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-check-circle text-green-500"></i>
+                                    </div>
+                                    <div class="min-w-0 flex-1 px-4">
+                                        <div>
+                                            <p class="text-sm font-medium text-green-600 truncate">
+                                                Swap completed
+                                            </p>
+                                            <p class="mt-1 text-sm text-gray-500">
+                                                You received "Summer White Dress" from JaneDoe
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ml-5 flex-shrink-0">
+                                    <p class="text-sm text-gray-500">
+                                        2h ago
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="px-4 py-4 sm:px-6">
+                            <div class="flex items-center">
+                                <div class="min-w-0 flex-1 flex items-center">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-exchange-alt text-blue-500"></i>
+                                    </div>
+                                    <div class="min-w-0 flex-1 px-4">
+                                        <div>
+                                            <p class="text-sm font-medium text-blue-600 truncate">
+                                                Swap requested
+                                            </p>
+                                            <p class="mt-1 text-sm text-gray-500">
+                                                JohnSmith wants your "Vintage Denim Jacket"
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ml-5 flex-shrink-0">
+                                    <p class="text-sm text-gray-500">
+                                        1d ago
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="px-4 py-4 sm:px-6">
+                            <div class="flex items-center">
+                                <div class="min-w-0 flex-1 flex items-center">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-coins text-yellow-500"></i>
+                                    </div>
+                                    <div class="min-w-0 flex-1 px-4">
+                                        <div>
+                                            <p class="text-sm font-medium text-yellow-600 truncate">
+                                                Points earned
+                                            </p>
+                                            <p class="mt-1 text-sm text-gray-500">
+                                                +50 points for listing "Leather Ankle Boots"
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ml-5 flex-shrink-0">
+                                    <p class="text-sm text-gray-500">
+                                        2d ago
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Detail Page Preview -->
+    <div class="bg-white py-12">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:text-center mb-8">
+                <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">Item Details</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    Vintage Denim Jacket
+                </p>
+            </div>
+
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                            Item Information
+                        </h3>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                            Available
+                        </span>
+                    </div>
+                </div>
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Image Gallery -->
+                        <div>
+                            <div class="relative rounded-lg overflow-hidden mb-4" style="padding-bottom: 100%;">
+                                <img class="absolute h-full w-full object-cover" src="https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Denim jacket">
+                            </div>
+                            <div class="grid grid-cols-4 gap-2">
+                                <div class="relative rounded-md overflow-hidden" style="padding-bottom: 100%;">
+                                    <img class="absolute h-full w-full object-cover" src="https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Denim jacket">
+                                </div>
+                                <div class="relative rounded-md overflow-hidden" style="padding-bottom: 100%;">
+                                    <img class="absolute h-full w-full object-cover" src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Denim jacket back">
+                                </div>
+                                <div class="relative rounded-md overflow-hidden" style="padding-bottom: 100%;">
+                                    <img class="absolute h-full w-full object-cover" src="https://images.unsplash.com/photo-1598300042247-d088f8ab3c91?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Denim jacket detail">
+                                </div>
+                                <div class="relative rounded-md overflow-hidden" style="padding-bottom: 100%;">
+                                    <img class="absolute h-full w-full object-cover" src="https://images.unsplash.com/photo-1525450824786-227cbef70703?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Denim jacket tag">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Item Details -->
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-2xl font-bold text-gray-900">Vintage Denim Jacket</h3>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-lg font-medium bg-green-100 text-green-800">
+                                    250 pts
+                                </span>
+                            </div>
+
+                            <div class="mt-4 flex items-center">
+                                <div class="flex items-center">
+                                    <i class="fas fa-star text-yellow-400"></i>
+                                    <span class="text-gray-600 ml-1">4.8 (24 reviews)</span>
+                                </div>
+                                <span class="mx-2 text-gray-300">•</span>
+                                <div class="flex items-center">
+                                    <i class="fas fa-map-marker-alt text-gray-400"></i>
+                                    <span class="text-gray-600 ml-1">New York, NY</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-6">
+                                <h4 class="text-sm font-medium text-gray-900">Details</h4>
+                                <div class="mt-2 grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Category</p>
+                                        <p class="text-sm font-medium text-gray-900">Outerwear</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Type</p>
+                                        <p class="text-sm font-medium text-gray-900">Jacket</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Size</p>
+                                        <p class="text-sm font-medium text-gray-900">M</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Condition</p>
+                                        <p class="text-sm font-medium text-gray-900">Excellent</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6">
+                                <h4 class="text-sm font-medium text-gray-900">Description</h4>
+                                <div class="mt-2 text-sm text-gray-700">
+                                    <p>This vintage denim jacket is in excellent condition with minimal signs of wear. It's a classic Levi's trucker jacket with the original care tag still attached. The jacket features a regular fit, button-front closure, and two chest pockets. The denim has a nice medium wash that pairs well with anything.</p>
+                                    <p class="mt-2">The jacket has been gently worn and recently dry cleaned. No stains, tears, or odors. Perfect for layering in spring or fall.</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-6">
+                                <h4 class="text-sm font-medium text-gray-900">Listed by</h4>
+                                <div class="mt-2 flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden bg-gray-200">
+                                        <i class="fas fa-user text-2xl text-gray-400 mt-2 ml-2"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-900">JaneDoe</p>
+                                        <p class="text-sm text-gray-500">Member since 2022</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-8">
+                                <button class="w-full flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">
+                                    <i class="fas fa-exchange-alt mr-2"></i> Request Swap
+                                </button>
+                                <button class="mt-3 w-full flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-green-700 bg-green-100 hover:bg-green-200">
+                                    <i class="fas fa-coins mr-2"></i> Redeem with Points
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add New Item Form -->
+    <div class="bg-gray-50 py-12">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:text-center mb-8">
+                <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">List an Item</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    Share your pre-loved clothes
+                </p>
+                <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+                    List your item to start earning points for swaps.
+                </p>
+            </div>
+
+            <div class="mt-10 bg-white shadow overflow-hidden sm:rounded-lg">
+                <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Item Details
+                    </h3>
+                    <p class="mt-1 text-sm text-gray-500">
+                        Provide as much detail as possible to help others find your item.
+                    </p>
+                </div>
+                <div class="px-4 py-5 sm:p-6">
+                    <form>
+                        <div class="space-y-6">
+                            <!-- Image Upload -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">
+                                    Photos
+                                </label>
+                                <div class="mt-1 flex flex-wrap gap-4">
+                                    <div class="relative border-2 border-gray-300 border-dashed rounded-lg p-4 text-center">
+                                        <div class="flex flex-col items-center justify-center">
+                                            <i class="fas fa-camera text-gray-400 text-3xl mb-2"></i>
+                                            <span class="block text-sm font-medium text-gray-900">Add photos</span>
+                                            <span class="block text-xs text-gray-500">JPEG or PNG, up to 5MB</span>
+                                        </div>
+                                        <input type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" id="image-upload" multiple>
+                                    </div>
+                                    <div id="image-previews" class="flex flex-wrap gap-4">
+                                        <!-- Image previews will be added here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Title -->
+                            <div>
+                                <label for="title" class="block text-sm font-medium text-gray-700">
+                                    Title
+                                </label>
+                                <div class="mt-1">
+                                    <input type="text" id="title" name="title" class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="e.g. Vintage Denim Jacket">
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div>
+                                <label for="description" class="block text-sm font-medium text-gray-700">
+                                    Description
+                                </label>
+                                <div class="mt-1">
+                                    <textarea id="description" name="description" rows="4" class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Describe your item in detail (condition, brand, style, etc.)"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Category -->
+                            <div>
+                                <label for="category" class="block text-sm font-medium text-gray-700">
+                                    Category
+                                </label>
+                                <div class="mt-1">
+                                    <select id="category" name="category" class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                        <option value="">Select a category</option>
+                                        <option value="tops">Tops</option>
+                                        <option value="bottoms">Bottoms</option>
+                                        <option value="outerwear">Outerwear</option>
+                                        <option value="dresses">Dresses</option>
+                                        <option value="accessories">Accessories</option>
+                                        <option value="shoes">Shoes</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Type -->
+                            <div>
+                                <label for="type" class="block text-sm font-medium text-gray-700">
+                                    Type
+                                </label>
+                                <div class="mt-1">
+                                    <select id="type" name="type" class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                        <option value="">Select a type</option>
+                                        <!-- Options will be populated based on category selection -->
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Size -->
+                            <div>
+                                <label for="size" class="block text-sm font-medium text-gray-700">
+                                    Size
+                                </label>
+                                <div class="mt-1">
+                                    <select id="size" name="size" class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                        <option value="">Select size</option>
+                                        <option value="xs">XS</option>
+                                        <option value="s">S</option>
+                                        <option value="m">M</option>
+                                        <option value="l">L</option>
+                                        <option value="xl">XL</option>
+                                        <option value="xxl">XXL</option>
+                                        <option value="os">One Size</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Condition -->
+                            <div>
+                                <label for="condition" class="block text-sm font-medium text-gray-700">
+                                    Condition
+                                </label>
+                                <div class="mt-1">
+                                    <select id="condition" name="condition" class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                        <option value="">Select condition</option>
+                                        <option value="new">New with tags</option>
+                                        <option value="excellent">Excellent used condition</option>
+                                        <option value="good">Good used condition</option>
+                                        <option value="fair">Fair condition</option>
+                                        <option value="poor">Poor condition (flaws noted)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Tags -->
+                            <div>
+                                <label for="tags" class="block text-sm font-medium text-gray-700">
+                                    Tags (comma separated)
+                                </label>
+                                <div class="mt-1">
+                                    <input type="text" id="tags" name="tags" class="shadow-sm focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="e.g. vintage, denim, casual">
+                                </div>
+                            </div>
+
+                            <div class="pt-5">
+                                <div class="flex justify-end">
+                                    <button type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                        Cancel
+                                    </button>
+                                    <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                        List Item
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="bg-white py-12" id="about">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:text-center mb-12">
+                <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">About ReWear</h2>
+                <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    Sustainable fashion for everyone
+                </p>
+            </div>
+
+            <div class="prose prose-green text-gray-500 mx-auto lg:max-w-none lg:grid lg:grid-cols-2 lg:gap-8">
+                <div>
+                    <p>
+                        ReWear was born out of a simple idea: what if we could make fashion more sustainable by making it easier for people to exchange clothes they no longer wear?
+                    </p>
+                    <p>
+                        The fashion industry is one of the largest polluters in the world, with millions of tons of clothing ending up in landfills each year. At the same time, many of us have closets full of clothes we rarely or never wear.
+                    </p>
+                    <p>
+                        ReWear provides a platform where you can give these clothes a second life by swapping them with others in your community. It's good for your wallet, good for your wardrobe, and good for the planet.
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        Our mission is to reduce textile waste by creating a circular economy for clothing. Every item swapped is one less item produced new and one less item ending up in a landfill.
+                    </p>
+                    <p>
+                        We believe sustainable fashion should be accessible to everyone, not just those who can afford expensive eco-friendly brands. By making it easy and rewarding to swap clothes, we're democratizing sustainable fashion.
+                    </p>
+                    <p>
+                        Join us in creating a more sustainable future, one swap at a time.
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-12 bg-green-50 rounded-lg p-6 md:p-8">
+                <div class="md:flex md:items-center md:justify-between">
+                    <div class="md:w-2/3">
+                        <h3 class="text-xl font-bold text-gray-900">Have questions?</h3>
+                        <p class="mt-2 text-gray-600">
+                            Check out our FAQ or contact our support team.
+                        </p>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        <button class="w-full md:w-auto flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">
+                            Contact Support
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">
+                        About
+                    </h3>
+                    <ul class="mt-4 space-y-4">
+                        <li>
+                            <a href="#" class="text-base text-gray-300 hover:text-white">
+                                Our Story
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-base text-gray-300 hover:text-white">
+                                Mission
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-base text-gray-300 hover:text-white">
+                                Impact
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-base text-gray-300 hover:text-white">
+                                Team
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">
+                        Support
+                    </h3>
+                    <ul class="mt-4 space-y-4">
+                        <li>
+                            <a href="#" class="text-base text-gray-300 hover:text-white">
+                                Help Center
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-base text-gray-300 hover:text-white">
+                                Safety
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-base text-gray-300 hover:text-white">
+                                Community Guidelines
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-base text-gray-300 hover:text-white">
+                                Contact Us
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">
+                        Legal
+                    </h3>
+                    <ul class="mt-4 space-y-4">
+                        <li>
+                            <a href="#" class="text-base text-gray-300 hover:text-white">
+                                Terms of Service
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-base text-gray-300 hover:text-white">
+                                Privacy Policy
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-base text-gray-300 hover:text-white">
+                                Cookie Policy
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">
+                        Connect
+                    </h3>
+                    <div class="mt-4 flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                    <div class="mt-6">
+                        <h4 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">
+                            Newsletter
+                        </h4>
+                        <div class="mt-2 flex">
+                            <input type="email" placeholder="Your email" class="px-4 py-2 border border-gray-600 bg-gray-700 text-white rounded-l-md focus:outline-none focus:ring-1 focus:ring-green-500 w-full">
+                            <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-r-md">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-gray-700 pt-8">
+                <p class="text-base text-gray-400 text-center">
+                    &copy; 2023 ReWear. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+
+        mobileMenuButton.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.contains('hidden');
+            if (isOpen) {
+                mobileMenu.classList.remove('hidden');
+                menuIcon.classList.remove('fa-bars');
+                menuIcon.classList.add('fa-times');
+            } else {
+                mobileMenu.classList.add('hidden');
+                menuIcon.classList.remove('fa-times');
+                menuIcon.classList.add('fa-bars');
+            }
+        });
+
+        // Carousel functionality
+        const carouselTrack = document.getElementById('carousel-track');
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        const prevButton = document.getElementById('carousel-prev');
+        const nextButton = document.getElementById('carousel-next');
+        
+        let currentIndex = 0;
+        const itemWidth = carouselItems[0].offsetWidth;
+        const visibleItems = window.innerWidth < 640 ? 1 : 
+                           window.innerWidth < 768 ? 2 : 
+                           window.innerWidth < 1024 ? 3 : 4;
+        
+        function updateCarousel() {
+            const offset = -currentIndex * itemWidth;
+            carouselTrack.style.transform = `translateX(${offset}px)`;
+        }
+        
+        nextButton.addEventListener('click', () => {
+            if (currentIndex < carouselItems.length - visibleItems) {
+                currentIndex++;
+                updateCarousel();
+            }
+        });
+        
+        prevButton.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        });
+
+        // Responsive carousel adjustments
+        window.addEventListener('resize', () => {
+            const newVisibleItems = window.innerWidth < 640 ? 1 : 
+                                  window.innerWidth < 768 ? 2 : 
+                                  window.innerWidth < 1024 ? 3 : 4;
+            
+            if (newVisibleItems !== visibleItems) {
+                currentIndex = 0;
+                updateCarousel();
+            }
+        });
+
+        // Image upload preview
+        const imageUpload = document.getElementById('image-upload');
+        const imagePreviews = document.getElementById('image-previews');
+
+        imageUpload.addEventListener('change', function(event) {
+            const files = event.target.files;
+            imagePreviews.innerHTML = ''; // Clear previous previews
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (!file.type.match('image.*')) continue;
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const previewDiv = document.createElement('div');
+                    previewDiv.className = 'relative';
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'image-upload-preview';
+                    
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center -mt-2 -mr-2';
+                    removeBtn.innerHTML = '<i class="fas fa-times text-xs"></i>';
+                    removeBtn.onclick = function() {
+                        previewDiv.remove();
+                    };
+                    
+                    previewDiv.appendChild(img);
+                    previewDiv.appendChild(removeBtn);
+                    imagePreviews.appendChild(previewDiv);
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Category to type mapping
+        const categorySelect = document.getElementById('category');
+        const typeSelect = document.getElementById('type');
+        
+        const typeOptions = {
+            'tops': ['T-shirt', 'Blouse', 'Shirt', 'Sweater', 'Tank Top', 'Crop Top'],
+            'bottoms': ['Jeans', 'Pants', 'Shorts', 'Skirt', 'Leggings'],
+            'outerwear': ['Jacket', 'Coat', 'Blazer', 'Vest', 'Hoodie'],
+            'dresses': ['Casual Dress', 'Formal Dress', 'Cocktail Dress', 'Sundress', 'Maxi Dress'],
+            'accessories': ['Scarf', 'Hat', 'Belt', 'Bag', 'Jewelry'],
+            'shoes': ['Sneakers', 'Boots', 'Sandals', 'Heels', 'Flats']
+        };
+        
+        categorySelect.addEventListener('change', function() {
+            const selectedCategory = this.value;
+            typeSelect.innerHTML = '<option value="">Select a type</option>';
+            
+            if (selectedCategory && typeOptions[selectedCategory]) {
+                typeOptions[selectedCategory].forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type.toLowerCase().replace(' ', '-');
+                    option.textContent = type;
+                    typeSelect.appendChild(option);
+                });
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                        menuIcon.classList.remove('fa-times');
+                        menuIcon.classList.add('fa-bars');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
 </html>
